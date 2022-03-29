@@ -1,57 +1,64 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import { useEffect, useState } from "react";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import { Routes, Route } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import styled from "styled-components";
+import Login from "./components/Login";
+import { auth } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "./app/slices/GeneralSlice";
+import Loading from "./components/Loading";
+const Wrapper = styled.section`
+  height: 100vh;
+  width: 100vw;
+  padding-top: 64px;
+  display: flex;
+`;
 
 function App() {
+  const { user } = useSelector((state) => state.general);
+  const [isLoading, setLoading] = useState(true);
+  // get a user from firebase
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        dispatch(
+          setUser({
+            uid: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            email: user.email,
+          })
+        );
+      } else {
+        console.error("Error");
+      }
+      setLoading(false);
+    });
+
+    return unsub;
+  }, [dispatch]);
+
+  if (isLoading) return <Loading />;
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <>
+      {!user ? (
+        <Login />
+      ) : (
+        <>
+          <Navbar />
+          <Wrapper>
+            <Sidebar />
+            <Routes>
+              <Route path="/rooms/:id" element={<Home />} />
+            </Routes>
+          </Wrapper>
+        </>
+      )}
+    </>
   );
 }
 
