@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import ChatFooter from "../components/ChatFooter";
 import ChatHeader from "../components/ChatHeader";
@@ -29,6 +29,7 @@ const messagesStyled = css({
 });
 
 const Home = () => {
+  const soundRef = useRef(null);
   const { id } = useParams();
   const [room, setRoom] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -57,17 +58,19 @@ const Home = () => {
     return unsub;
   }, [id]);
 
-  // useEffect(() => {
-  //   let sound = soundRef.current;
-  //   sound.play();
+  useEffect(() => {
+    let sound = soundRef.current;
+    sound.play();
 
-  //   return () => {
-  //     sound.pause();
-  //   };
-  // }, [messages]);
+    return () => {
+      sound.pause();
+    };
+  }, [messages]);
 
   return (
     <>
+      <audio hidden ref={soundRef} src="/sounds/message.mp3" controls></audio>
+
       <ChatWrapped>
         <ChatHeader roomName={room?.name} />
         <ScrollToBottom

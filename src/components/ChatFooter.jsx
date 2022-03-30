@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { db, storage } from "../firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { BsEmojiSunglasses } from "react-icons/bs";
 import { GrLike } from "react-icons/gr";
@@ -59,8 +59,6 @@ const Image = styled.img`
 `;
 
 const ChatFooter = ({ roomId }) => {
-  const soundRef = useRef(null);
-
   const [msg, setMessage] = useState("");
   const [currImage, setCurrImage] = useState(null);
   const [currFile, setCurrFile] = useState(null);
@@ -82,7 +80,6 @@ const ChatFooter = ({ roomId }) => {
         console.log(err);
       }
       setMessage("");
-      soundRef.current.play();
     }
   };
 
@@ -105,7 +102,6 @@ const ChatFooter = ({ roomId }) => {
     } catch (error) {
       console.log(error);
     }
-    soundRef.current.play();
   };
   // remove all content field
   const emptyField = (e) => {
@@ -166,7 +162,7 @@ const ChatFooter = ({ roomId }) => {
             roomId,
           });
         });
-        soundRef.current.play();
+
         setCurrImage(null);
         setMessage("");
       }
@@ -175,8 +171,6 @@ const ChatFooter = ({ roomId }) => {
 
   return (
     <>
-      <audio ref={soundRef} hidden src="/sounds/message.mp3" controls></audio>
-
       {open && <Picker onEmojiClick={onEmojiClick} />}
       {/* area image */}
       {currImage && (
