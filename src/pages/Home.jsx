@@ -24,7 +24,7 @@ const ChatWrapped = styled.section`
 
 const messagesStyled = css({
   flex: 1,
-  padding: "15px 10px",
+  padding: "15px 0px",
   overflowY: "auto",
 });
 
@@ -57,21 +57,36 @@ const Home = () => {
     return unsub;
   }, [id]);
 
+  // useEffect(() => {
+  //   let sound = soundRef.current;
+  //   sound.play();
+
+  //   return () => {
+  //     sound.pause();
+  //   };
+  // }, [messages]);
+
   return (
-    <ChatWrapped>
-      <ChatHeader roomName={room?.name} />
-      <ScrollToBottom className={messagesStyled} initialScrollBehavior="smooth">
-        {messages.length ? (
-          <FlipMove>
-            {messages.map((msg) => {
-              return <Messages key={msg.id} {...msg} />;
-            })}
-          </FlipMove>
-        ) : null}
-      </ScrollToBottom>
-      {/* messages */}
-      <ChatFooter roomId={id} />
-    </ChatWrapped>
+    <>
+      <ChatWrapped>
+        <ChatHeader roomName={room?.name} />
+        <ScrollToBottom
+          className={messagesStyled}
+          initialScrollBehavior="smooth"
+          followButtonClassName="button-scroll-bottom"
+        >
+          {messages.length ? (
+            <FlipMove>
+              {messages.map((msg) => {
+                return <Messages key={msg.id} id={msg.id} {...msg} />;
+              })}
+            </FlipMove>
+          ) : null}
+        </ScrollToBottom>
+        {/* messages */}
+        <ChatFooter roomId={id} />
+      </ChatWrapped>
+    </>
   );
 };
 

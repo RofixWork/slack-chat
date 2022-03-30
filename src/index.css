@@ -8,3 +8,16 @@ body {
   font-family: "Roboto", sans-serif;
   overflow-x: hidden;
 }
+
+.button-scroll-bottom {
+  width: 30px !important;
+  height: 30px !important;
+  background-color: #111 !important;
+  cursor: pointer !important;
+}
+.button-scroll-bottom::before {
+  content: "\2193";
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+}

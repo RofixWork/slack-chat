@@ -45,7 +45,11 @@ const Navbar = () => {
 
   // menu
   return (
-    <AppBarStyled position="fixed" components="header">
+    <AppBarStyled
+      position="fixed"
+      components="header"
+      sx={{ boxShadow: "none !important" }}
+    >
       <Toolbar
         sx={{ paddingLeft: "10px !important", paddingRight: "10px !important" }}
       >
@@ -77,7 +81,6 @@ const Navbar = () => {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={logOut}>Logout</MenuItem>
       </Menu>
     </AppBarStyled>
