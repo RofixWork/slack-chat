@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { FaTrash } from "react-icons/fa";
 import { db } from "../firebase";
 import { doc, deleteDoc } from "firebase/firestore";
+import { useDispatch } from "react-redux";
+import { setImage, toggleModal } from "../app/slices/GeneralSlice";
 const Message = styled.article`
   display: flex;
   align-items: flex-start;
@@ -27,6 +29,7 @@ const Image = styled.img`
   object-position: center;
   border-radius: 20px;
   outline: 1px solid whitesmoke;
+  cursor: pointer;
   outline-offset: 5px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 `;
@@ -34,13 +37,18 @@ const Image = styled.img`
 const Messages = forwardRef(
   ({ id, message, username, picture, timestamp, user, image }, ref) => {
     const { user: currUser } = useSelector((state) => state.general);
-
+    const dispatch = useDispatch();
     const removeMessage = async (id) => {
       try {
         await deleteDoc(doc(db, "messages", id));
       } catch (err) {
         console.error(err);
       }
+    };
+
+    const modalToggle = (image) => {
+      dispatch(toggleModal());
+      dispatch(setImage(image));
     };
 
     return (
@@ -65,19 +73,25 @@ const Messages = forwardRef(
                   >
                     <FaTrash />
                   </IconButton>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                    {username}
-                  </Typography>
                   <Typography
-                    variant="body2"
+                    variant="caption"
                     sx={{ color: "#8a8d91", fontWeight: 700 }}
                   >
-                    {timestamp?.toDate().toLocaleString()}
+                    {timestamp?.toDate().toLocaleTimeString()}
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                    {username}
                   </Typography>
                 </Stack>
 
                 <div>
-                  {image && <Image src={image} alt="image" />}
+                  {image && (
+                    <Image
+                      onClick={() => modalToggle(image)}
+                      src={image}
+                      alt="image"
+                    />
+                  )}
 
                   {message && (
                     <Stack direction="row" justifyContent="flex-end">
@@ -107,13 +121,19 @@ const Messages = forwardRef(
                     {username}
                   </Typography>
                   <Typography
-                    variant="body2"
+                    variant="caption"
                     sx={{ color: "#8a8d91", fontWeight: 700 }}
                   >
-                    {timestamp?.toDate().toLocaleString()}
+                    {timestamp?.toDate().toLocaleTimeString()}
                   </Typography>
                 </Stack>
-                {image && <Image src={image} alt="image" />}
+                {image && (
+                  <Image
+                    onClick={() => modalToggle(image)}
+                    src={image}
+                    alt="image"
+                  />
+                )}
                 {message && (
                   <Stack direction="row" justifyContent="flex-start">
                     <Chip

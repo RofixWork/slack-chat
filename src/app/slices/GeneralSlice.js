@@ -5,6 +5,8 @@ export const GeneralSlice = createSlice({
   initialState: {
     toggle: false,
     user: null,
+    modal: false,
+    image: null,
   },
   reducers: {
     sidebarToggle: (state, action) => {
@@ -13,7 +15,15 @@ export const GeneralSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    setImage: (state, action) => {
+      state.image = null;
+      state.image = action.payload;
+    },
+    toggleModal: (state, action) => {
+      state.modal = !state.modal;
+    },
   },
 });
-export const { sidebarToggle, setUser } = GeneralSlice.actions;
+export const { sidebarToggle, setUser, setImage, toggleModal } =
+  GeneralSlice.actions;
 export default GeneralSlice.reducer;

@@ -15,6 +15,8 @@ import {
 } from "firebase/firestore";
 import { css } from "@emotion/css";
 import ScrollToBottom from "react-scroll-to-bottom";
+import Modal from "../components/Modal";
+
 const ChatWrapped = styled.section`
   display: flex;
   flex-direction: column;
@@ -69,6 +71,7 @@ const Home = () => {
 
   return (
     <>
+      <Modal />
       <audio hidden ref={soundRef} src="/sounds/message.mp3" controls></audio>
 
       <ChatWrapped>
