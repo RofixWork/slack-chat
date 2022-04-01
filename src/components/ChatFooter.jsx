@@ -9,8 +9,10 @@ import IconButton from "@mui/material/IconButton";
 import { BsImage } from "react-icons/bs";
 import { FaTimesCircle } from "react-icons/fa";
 import { AiOutlineSend } from "react-icons/ai";
+import { MdKeyboardVoice } from "react-icons/md";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
+import RecordAudio from "./RecordAudio";
 import Picker from "emoji-picker-react";
 const FooterChat = styled.footer`
   height: 53.02px;
@@ -63,6 +65,7 @@ const ChatFooter = ({ roomId }) => {
   const [currImage, setCurrImage] = useState(null);
   const [currFile, setCurrFile] = useState(null);
   const [open, setOpen] = useState(false);
+  const [audioArea, setAudioArea] = useState(false);
   const { user } = useSelector((state) => state.general);
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -172,6 +175,17 @@ const ChatFooter = ({ roomId }) => {
   return (
     <>
       {open && <Picker onEmojiClick={onEmojiClick} />}
+      {/* audio */}
+      {audioArea && (
+        <RecordAudio
+          roomId={roomId}
+          photoURL={user.photoURL}
+          displayName={user.displayName}
+          uid={user.uid}
+          setAudioArea={setAudioArea}
+        />
+      )}
+      {/* audio */}
       {/* area image */}
       {currImage && (
         <ImageArea>
@@ -201,6 +215,9 @@ const ChatFooter = ({ roomId }) => {
             <BsImage />
           </IconButton>
           <input type="file" onChange={chooseImage} hidden id="file" />
+          <IconButton size="small" onClick={() => setAudioArea(!audioArea)}>
+            <MdKeyboardVoice />
+          </IconButton>
           <IconButton size="small" onClick={() => setOpen(!open)}>
             <BsEmojiSunglasses />
           </IconButton>

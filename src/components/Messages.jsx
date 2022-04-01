@@ -35,7 +35,7 @@ const Image = styled.img`
 `;
 
 const Messages = forwardRef(
-  ({ id, message, username, picture, timestamp, user, image }, ref) => {
+  ({ id, message, username, picture, timestamp, user, image, audio }, ref) => {
     const { user: currUser } = useSelector((state) => state.general);
     const dispatch = useDispatch();
     const removeMessage = async (id) => {
@@ -85,6 +85,7 @@ const Messages = forwardRef(
                 </Stack>
 
                 <div>
+                  {audio && <audio src={audio} controls></audio>}
                   {image && (
                     <Image
                       onClick={() => modalToggle(image)}
@@ -127,6 +128,7 @@ const Messages = forwardRef(
                     {timestamp?.toDate().toLocaleTimeString()}
                   </Typography>
                 </Stack>
+                {audio && <audio src={audio} controls></audio>}
                 {image && (
                   <Image
                     onClick={() => modalToggle(image)}
